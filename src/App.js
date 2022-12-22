@@ -1,12 +1,11 @@
-import logo from './logo.svg';
-import './App.css';
-import MyComponent from "./components/MyComponent";
-import Game from "./components/Game";
-import Card from '@mui/material/Card';
-import Button from "@mui/material/Button";
-import {useState} from "react";
-import {Paper, Skeleton, Stack, styled} from "@mui/material";
-
+import logo from './logo.svg'
+import './App.css'
+import MyComponent from './components/MyComponent'
+import Game from './components/Game'
+import Card from '@mui/material/Card'
+import Button from '@mui/material/Button'
+import { useEffect, useState } from 'react'
+import { Paper, Skeleton, Stack, styled } from '@mui/material'
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -14,79 +13,106 @@ const Item = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(1),
     textAlign: 'center',
     color: theme.palette.text.secondary,
-}));
+}))
 
 function App() {
-    const [data, setData] = useState(null);
-    const [clicked, setClicked] = useState(null);
+    const [data, setData] = useState(null)
+    const [clicked, setClicked] = useState(null)
 
-  return (
-    <div className="App">
-        <Card id = "welcome" variant="outlined">Welcome!, Click to Geolocate!</Card>
+    const api_url =
+        'https://ipgeolocation.abstractapi.com/v1/?api_key=18308436a43c4b2da403a9a6909cb85c'
+    //function that calls and parses api data properly
+    async function api_call() {
+        const response = await fetch(api_url)
+        const localDate = await response.json()
 
-            <Button variant = "outlined"
+        let result = JSON.parse(JSON.stringify(localDate))
+        let city_state = result['city'] + ', ' + result.region
+        document.getElementById('country_output').textContent =
+            'Your IP: ' + result['ip_address']
+        document.getElementById('city_state_output').innerHTML =
+            'Location: ' +
+            result['city'] +
+            ', ' +
+            result['region'] +
+            ', ' +
+            result['country'] +
+            ' ' +
+            result.flag['emoji'] +
+            ' Continent: ' +
+            result.continent
+
+        let time = result.timezone['current_time']
+        document.getElementById('ISP_output').innerHTML =
+            'Current ISP: ' + result.connection['isp_name']
+        document.getElementById('timezone').innerHTML =
+            'Timezone: ' + result.timezone['abbreviation']
+        document.getElementById('time').innerHTML =
+             time
+
+        const mapData = document.getElementById('map')
+        const lon = result['longitude']
+        const lat = result['latitude']
+        //creates the map using latitude and longitude
+        mapData.src = `https://maps.google.com/maps?q=${lat},${lon}&hl=es;&output=embed`
+
+        const img = document.querySelector('img')
+        img.src = result.flag['png']
+    }
+
+    return (
+        <div className='App'>
+            <Card id='welcome' variant='outlined'>
+                Welcome!, Click to Geolocate!
+            </Card>
+            <Button
+                variant='outlined'
                 onClick={() => {
                     //teranary operator
-                    var isClicked =  clicked != null ? clicked : false;
-                    setClicked(!isClicked);
+                    var isClicked = clicked != null ? clicked : false
+                    setClicked(!isClicked)
 
-                    //alert('clicked');
-                    if (clicked === true){
-                        document.getElementById("hidden").style.opacity = 1.0;
+
+                    if (clicked === true) {
+                        document.getElementById('hidden').style.opacity = 0
+
+                    } else {
+                        document.getElementById('hidden').style.opacity = 1.0
+                        api_call()
                     }
-                    else{
-                        document.getElementById("hidden").style.opacity = 0;
-                    }
-
-                        fetch('https://ipgeolocation.abstractapi.com/v1/?api_key=18308436a43c4b2da403a9a6909cb85c')
-                            .then(response => response.json())
-                            .then(data => setData(data));
-
                 }}
             >
                 Click me
             </Button>
+            {/*creates the webpage*/}
+            <div class='body' id='hidden'>
+                <div class='leftDiv'>
+                    {/*makes the left handside stack*/}
+                    <Stack spacing={5}>
+                        <Item id='country_output'></Item>
+                        <Item id='ISP_output'></Item>
+                        <Item id='city_state_output'></Item>
+                    </Stack>
+                    <iframe id='map'></iframe>
+                </div>
 
-        <div class="body" id="hidden">
-            <div class="leftDiv">
-                {/*makes the left handside stack*/}
-                <Stack spacing={5}>
-                    <Item>Continent/country from api</Item>
-                    <Item>City and State(add a building icon or something maybe)</Item>
-                    <Item>IP address and ISP maybe</Item>
-                </Stack>
+                {/*makes the right side div to hold the countries flag and timezone*/}
+                <div class='rightDiv'>
+                    <div class='flagDiv'>
+                        <img />
+                    </div>
+                    {/*timezone*/}
+                    <div id = 'timezone'>
+                    </div>
+                    {/*time*/}
+                    <div id = 'time'>
+
+                    </div>
+
+                </div>
             </div>
-            {/*makes the right side circle to hold the countries flag*/}
-            <div class ="flagDiv">color is a placeholder the flag png would go here</div>
-
         </div>
-
-        {/*this code below is how to get the api call to display but idk how to parse it yet*/}
-        {/*JSON.stringify(data)*/}
-
-        putting the map and using latitude and longitude would be cool down here but if not we can fill the space.
-
-
-
-
-        {/*<Game></Game>*/}
-        {/*  <MyComponent/>*/}
-        {/*<header className="App-header">*/}
-        {/*  <img src={logo} className="App-logo" alt="logo" />*/}
-        {/*  <p>*/}
-        {/*    Edit <code>Hello World</code> and save to reload.*/}
-        {/*  </p>*/}
-        {/*  <a*/}
-        {/*    className="App-link"*/}
-        {/*    href="https://reactjs.org"*/}
-        {/*    target="_blank"*/}
-        {/*    rel="noopener noreferrer"*/}
-        {/*  >*/}
-        {/*    Learn React*/}
-        {/*  </a>*/}
-        {/*</header>*/}
-    </div>
-  );
+    )
 }
 
-export default App;
+export default App

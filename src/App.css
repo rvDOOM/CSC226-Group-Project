@@ -39,36 +39,98 @@
   }
 }
 
-#welcome{
-  font-size: 5vw;
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#welcome {
+  font-size: 6vw;
   font-family: 'Bungee Shade', cursive;
 }
 
-#hidden{
-  opacity:0;
+#hidden {
+  opacity: 0;
   transition: opacity 1s;
 }
 
-.body{
-  width:100%;
-  margin:auto;
-  display:flex;
+.body {
+  width: 100%;
+  margin: auto;
+  display: flex;
   flex-wrap: wrap;
 }
-.leftDiv{
+.leftDiv {
   flex: 1 1 65%;
   flex-direction: column;
-  padding:5px;
-  margin-top:15px;
+  padding: 5px;
+  margin-top: 15px;
   /*background-color:teal;*/
 }
 
-.flagDiv{
+.rightDiv {
   flex: 1 1 30%;
-  flex-wrap: wrap;
-  margin:auto;
-  border-radius: 50%;
-  background-color:teal;
-  height:250px;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  margin-top: 15px;
+  /*background-color:teal;*/
 }
 
+.flagDiv {
+  flex: 1 1 30%;
+  flex-wrap: wrap;
+  margin: auto;
+  height: 50px;
+}
+
+img{
+  width: 300px;
+  margin-bottom: auto;
+  margin-top: auto;
+}
+
+
+#map {
+  margin-top: 20px;
+  height: 200px;
+  width: 100%;
+}
+
+#time{
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 40px;
+  margin-bottom: 45%;
+}
+
+#ISP_output{
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+}
+
+#country_output{
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+}
+
+#city_state_output{
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+}
+
+#timezone{
+  font-family: 'Roboto Slab', serif;
+  font-size: 16px;
+}
+
+button{
+  width:100%;
+}
